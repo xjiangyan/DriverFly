@@ -32,13 +32,13 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rb_home"
+            android:id="@+id/rb_jiakao"
             style="@style/MainButtonStyle"
             android:drawableTop="@drawable/jiakao_button_selector"
             android:text="驾考"/>
 
         <RadioButton
-            android:id="@+id/rb_recommend"
+            android:id="@+id/rb_discover"
             style="@style/MainButtonStyle"
             android:drawableTop="@drawable/faxian_button_selector"
             android:text="发现"/>

@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="huiiuh.com.driverfly">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,6 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.MainActivity">
+        </activity>
+        <activity android:name=".Activity.TypeActivity">
+        </activity>
+        <activity android:name=".Activity.TestActivity">
         </activity>
     </application>
 

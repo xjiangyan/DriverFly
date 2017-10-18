@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.DensityUtil;
+import huiiuh.com.driverfly.Util.SpUtil;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -26,6 +27,12 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        if (SpUtil.getInstance().getBoolean("isused", false)) {
+            Intent intent = new Intent(getApplication(), TypeActivity.class);
+            startActivity(intent);
+            finish();
+        }
         findview();
         init();
     }
@@ -36,9 +43,10 @@ public class SplashActivity extends AppCompatActivity {
         mGuide_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication(), MainActivity.class);
+                Intent intent = new Intent(getApplication(), TypeActivity.class);
                 startActivity(intent);
                 finish();
+                SpUtil.getInstance().save("isused", true);
             }
         });
 
