@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:name=".MyApplication"
@@ -22,7 +23,7 @@
         </activity>
         <activity android:name=".Activity.MainActivity">
         </activity>
-        <activity android:name=".Activity.TypeActivity">
+        <activity android:name=".Activity.CarTypeActivity">
         </activity>
         <activity android:name=".Activity.TestActivity">
         </activity>

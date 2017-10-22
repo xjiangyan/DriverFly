@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         if (SpUtil.getInstance().getBoolean("isused", false)) {
-            Intent intent = new Intent(getApplication(), TypeActivity.class);
+            Intent intent = new Intent(getApplication(), CarTypeActivity.class);
             startActivity(intent);
             finish();
         }
@@ -43,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         mGuide_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication(), TypeActivity.class);
+                Intent intent = new Intent(getApplication(), CarTypeActivity.class);
                 startActivity(intent);
                 finish();
                 SpUtil.getInstance().save("isused", true);
