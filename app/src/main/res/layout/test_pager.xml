@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rela_testpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f3fff1"
+    >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:id="@+id/line_questionAll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/test_question"
+                style="@style/test_style"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:text="题目"
+
+                />
+
+            <ImageView
+                android:id="@+id/test_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"/>
+
+            <!--<RadioGroup-->
+            <!--android:id="@+id/rg_testOption"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<RadioButton-->
+            <!--android:id="@+id/test_Option1"-->
+            <!--style="@style/test_style"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:drawableLeft="@drawable/selector_a_icon"-->
+            <!--/>-->
+
+            <!--<RadioButton-->
+            <!--android:id="@+id/test_Option2"-->
+            <!--style="@style/test_style"-->
+            <!--android:drawableLeft="@drawable/selector_b_icon"-->
+            <!--/>-->
+
+            <!--<RadioButton-->
+            <!--android:id="@+id/test_Option3"-->
+            <!--style="@style/test_style"-->
+            <!--android:drawableLeft="@drawable/selector_c_icon"-->
+            <!--/>-->
+
+            <!--<RadioButton-->
+            <!--android:id="@+id/test_Option4"-->
+            <!--style="@style/test_style"-->
+            <!--android:drawableLeft="@drawable/selector_d_icon"-->
+            <!--/>-->
+
+            <!--</RadioGroup>-->
+            <LinearLayout
+                android:id="@+id/line_option1"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_option1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_a_icon"/>
+
+                <TextView
+                    android:id="@+id/test_Option1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_option2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_option2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_b_icon"/>
+
+                <TextView
+                    android:id="@+id/test_Option2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_option3"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_option3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_c_icon"/>
+
+                <TextView
+                    android:id="@+id/test_Option3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_option4"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_option4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_d_icon"/>
+
+                <TextView
+                    android:id="@+id/test_Option4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_explain"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.01dp"
+                    android:background="@android:color/darker_gray"></View>
+
+                <TextView
+                    android:id="@+id/test_daan"
+                    style="@style/test_style"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="答案"
+                    />
+
+                <TextView
+                    android:id="@+id/test_explain"
+                    style="@style/test_style"
+                    android:layout_marginBottom="7dp"
+                    android:text="解释"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        />
+</RelativeLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f7f9"
+    android:orientation="vertical"
+    tools:context="huiiuh.com.driverfly.Activity.CarTypeActivity">
+
+    <include layout="@layout/titlebar"></include>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="驾驶证"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.25dp"
+            android:background="@android:color/darker_gray">
+
+        </View>
+
+        <RadioGroup
+
+            android:id="@+id/rg_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_xiaoche"
+                style="@style/radiobuttonStyle"
+                android:drawableTop="@drawable/car_type_c"
+                android:text="小车\nC1/C2/C3"/>
+
+            <RadioButton
+                android:id="@+id/rb_huoche"
+                style="@style/radiobuttonStyle"
+                android:drawableTop="@drawable/car_type_b"
+                android:text="货车\nA2/B2"/>
+
+            <RadioButton
+                android:id="@+id/rb_keche"
+                style="@style/radiobuttonStyle"
+                android:drawableTop="@drawable/car_type_a"
+                android:text="客车\nA1/A3/B1"/>
+
+            <RadioButton
+                android:id="@+id/rb_motuo"
+                style="@style/radiobuttonStyle"
+                android:drawableTop="@drawable/car_type_e"
+                android:text="摩托\nD/E/F"/>
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/check_true"
+        android:gravity="center"
+        android:text="已更新为2017年官方题库"
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        />
+
+    <Button
+        android:id="@+id/btn_typecheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_type"
+        android:text="确定"/>
+</LinearLayout>

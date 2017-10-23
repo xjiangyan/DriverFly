@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/off"
+        android:state_checked="false">
+        <bitmap android:src="@drawable/jiakao_ic_foot_baoming_n"></bitmap>
+    </item>
+
+    <item
+        android:id="@+id/on"
+        android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_6"
+        android:state_checked="true"></item>
+    <transition
+        android:drawable="@drawable/animation"
+        android:fromId="@+id/off"
+        android:toId="@+id/on"
+        ></transition>
+</animated-selector>

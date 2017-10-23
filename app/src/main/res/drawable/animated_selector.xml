@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_1"></item>
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_2"></item>
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_3"></item>
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_4"></item>
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_5"></item>
+    <item android:drawable="@drawable/jiakao__ic_main_foot_jiaxiao_6"></item>
+</animated-selector>

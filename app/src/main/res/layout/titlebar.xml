@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#02c357"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/titleBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
+
+        <RadioGroup
+            android:id="@+id/titlebar_rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <RadioButton
+                android:id="@+id/btn_dati"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/smallbutton_type"
+                android:button="@null"
+                android:text="答题模式"
+                android:textColor="@drawable/titlebar_text_selector"/>
+
+
+            <RadioButton
+                android:id="@+id/btn_beiti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/smallbutton_type"
+                android:button="@null"
+                android:text="背题模式"
+                android:textColor="@drawable/titlebar_text_selector"/>
+        </RadioGroup>
+
+
+        <TextView
+            android:id="@+id/titleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="标题"
+            android:visibility="invisible"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"/>
+
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/titleFunction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/textsize_selector"/>
+    </RelativeLayout>
+</LinearLayout>
