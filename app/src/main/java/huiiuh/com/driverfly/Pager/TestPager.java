@@ -8,10 +8,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
 import java.util.List;
 
 import huiiuh.com.driverfly.Base.BaseFragment;
@@ -30,6 +28,7 @@ import huiiuh.com.driverfly.Util.SpUtil;
 public class TestPager extends BaseFragment implements View.OnClickListener {
 
 
+    private final List<DataBean.ResultBeanX.ResultBean.ListBean> list;
     private int position;
     private String type;
     private int subject;
@@ -73,12 +72,9 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     private String check;
 
 
-    public TestPager(String type, int subject, int pagenum, String sort, int position) {
+    public TestPager(List<DataBean.ResultBeanX.ResultBean.ListBean> list, int position) {
         super();
-        this.type = type;
-        this.subject = subject;
-        this.pagenum = pagenum;
-        this.sort = sort;
+        this.list = list;
         this.position = position;
     }
 
@@ -133,9 +129,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mLine_option2.setOnClickListener(this);
         mLine_option3.setOnClickListener(this);
         mLine_option4.setOnClickListener(this);
-        mLine_explain = (LinearLayout) this.mTest_pager.findViewById(R.id.line_explain);
-        mProgressBar = (ProgressBar) this.mTest_pager.findViewById(R.id.progressBar);
-        mTest_question.setVisibility(View.VISIBLE);
+        mLine_explain = (LinearLayout) mTest_pager.findViewById(R.id.line_explain);
+        mProgressBar = (ProgressBar) mTest_pager.findViewById(R.id.progressBar);
         if (SpUtil.getInstance().getBoolean("isdati", true)) {
             mLine_explain.setVisibility(View.INVISIBLE);
         } else {
@@ -148,8 +143,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     @Override
     public void initData() {
         super.initData();
-
         setData();
+
         // readstate();
 
     }
@@ -162,25 +157,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
     private void setData() {
 
-        //读取assets下的资源文件
-        try {
-            InputStream is = mContext.getAssets().open("question_c1_subjectOne.txt");
-            int lenght = 0;
-
-            lenght = is.available();
-
-            byte[] buffer = new byte[lenght];
-
-            is.read(buffer);
-
-            String result = new String(buffer, "utf8");
-            processData(result);
-            Log.d("TestActivity", "读取到的" + result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("TestActivity", "读取出错" + e.getMessage().toString());
-        }
-
+        processData(list);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mTest_question.setText(mQuestion);
@@ -193,33 +170,32 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     }
 
 
-    private void processData(String data) {
-        Gson gson = new Gson();
-        DataBean dataBean = gson.fromJson(data, DataBean.class);
-        mList = dataBean.getResult().getResult().getList();
-        mChapter = mList.get(position).getChapter();
-        mQuestion = mList.get(position).getQuestion();
-        mPic = mList.get(position).getPic();
+    private void processData(List<DataBean.ResultBeanX.ResultBean.ListBean> data) {
+        mChapter = data.get(position).getChapter();
+        mQuestion = data.get(position).getQuestion();
+        mPic = data.get(position).getPic();
 
 
-        if (mList.get(position).getOption1().length() > 3) {
-            mOption1 = splitData(mList.get(position).getOption1());
-            mOption2 = splitData(mList.get(position).getOption2());
-            mOption3 = splitData(mList.get(position).getOption3());
-            mOption4 = splitData(mList.get(position).getOption4());
-        } else if (mList.get(position).getOption1().length() == 0) {
-            mTest_option3.setVisibility(View.GONE);
-            mTest_option4.setVisibility(View.GONE);
-            mIv_option3.setVisibility(View.GONE);
-            mIv_option4.setVisibility(View.GONE);
+        if (data.get(position).getOption1().length() > 3) {
+            mOption1 = splitData(data.get(position).getOption1());
+            mOption2 = splitData(data.get(position).getOption2());
+            mOption3 = splitData(data.get(position).getOption3());
+            mOption4 = splitData(data.get(position).getOption4());
+        } else if (data.get(position).getOption1().length() == 0) {
+            //            mTest_option3.setVisibility(View.GONE);
+            //            mTest_option4.setVisibility(View.GONE);
+            //            mIv_option3.setVisibility(View.GONE);
+            //            mIv_option4.setVisibility(View.GONE);
+            mLine_option3.setVisibility(View.GONE);
+            mLine_option4.setVisibility(View.GONE);
             mOption1 = "对";
             mOption2 = "错";
         }
-        mAnswer = mList.get(position).getAnswer();
-        mExplain = mList.get(position).getExplain();
+        mAnswer = data.get(position).getAnswer();
+        mExplain = data.get(position).getExplain();
 
-        if (mList.get(position).getPic() != null) {
-            mPic = mList.get(position).getPic();
+        if (data.get(position).getPic() != null && data.get(position).getPic().length() > 0) {
+            mPic = data.get(position).getPic();
             Picasso.with(mContext).load(mPic).into(mTest_pic);
             Log.d("TestPager", "你他妈执行了？");
         }
@@ -240,6 +216,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             case R.id.line_option1:
                 if (mAnswer.equals("A") || mAnswer.equals("对")) {
                     mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+                    //                    new TestActivity().mMyPagerAdapter.notifyDataSetChanged();
+                    goToNextViewPager();
                 } else {
                     mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
                 }
@@ -249,6 +227,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             case R.id.line_option2:
                 if (mAnswer.equals("B") || mAnswer.equals("错")) {
                     mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+                    goToNextViewPager();
+
                 } else {
                     mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
                 }
@@ -258,6 +238,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             case R.id.line_option3:
                 if (mAnswer.equals("C")) {
                     mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
+                    goToNextViewPager();
+
                 } else {
                     mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
                 }
@@ -267,6 +249,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             case R.id.line_option4:
                 if (mAnswer.equals("D")) {
                     mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
+                    goToNextViewPager();
+
                 } else {
                     mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
                 }
@@ -274,22 +258,59 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
                 break;
         }
+        showResult();
+
         mLine_option1.setEnabled(false);
         mLine_option2.setEnabled(false);
         mLine_option3.setEnabled(false);
         mLine_option4.setEnabled(false);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        SpUtil.getInstance().save("testedquestionnum", position);
-        SpUtil.getInstance().save("testedquestionanswer", mAnswer);
+    private void showResult() {
+        mLine_explain.setVisibility(View.VISIBLE);
+        switch (mAnswer.toString()) {
+            case "A":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+                break;
+            case "对":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
 
-        String testquestion = SpUtil.getInstance().getString("testquestioncheck", null);
-        SpUtil.getInstance().save("testquestioncheck", testquestion + "," + check);
+                break;
+            case "B":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
 
+                break;
+            case "错":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "C":
+                mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "D":
+                mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+        }
+    }
+
+    private void goToNextViewPager() {
+
+        // new TestActivity().updata(2);
+        //        if (test_viewpager.getCurrentItem() < 1310) {
+        //            test_viewpager.setCurrentItem(test_viewpager.getCurrentItem() + 1);
+        //        }
     }
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+
+    }
 }
+
+
+

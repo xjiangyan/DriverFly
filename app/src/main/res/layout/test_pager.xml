@@ -87,6 +87,8 @@
 
                 <TextView
                     android:id="@+id/test_Option1"
+
+                    style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -107,6 +109,8 @@
 
                 <TextView
                     android:id="@+id/test_Option2"
+
+                    style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -128,6 +132,8 @@
 
                 <TextView
                     android:id="@+id/test_Option3"
+
+                    style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -149,6 +155,7 @@
 
                 <TextView
                     android:id="@+id/test_Option4"
+                    style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
