@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import huiiuh.com.driverfly.Contact;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.DensityUtil;
 import huiiuh.com.driverfly.Util.SpUtil;
@@ -28,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        if (SpUtil.getInstance().getBoolean("isused", false)) {
+        if (SpUtil.getInstance().getBoolean(Contact.ISUSED, false)) {
             Intent intent = new Intent(getApplication(), CarTypeActivity.class);
             startActivity(intent);
             finish();
@@ -46,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplication(), CarTypeActivity.class);
                 startActivity(intent);
                 finish();
-                SpUtil.getInstance().save("isused", true);
+                SpUtil.getInstance().save(Contact.ISUSED, true);
             }
         });
 

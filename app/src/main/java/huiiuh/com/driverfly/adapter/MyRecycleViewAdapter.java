@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import huiiuh.com.driverfly.Activity.TestActivity;
+import huiiuh.com.driverfly.Contact;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
 
@@ -50,13 +51,15 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<MyRecycleViewAdap
             super(itemView);
             this.tv = (TextView) itemView.findViewById(R.id.te_testtype_name);
             this.mRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.rela_background);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Toast.makeText(mContext, "点击了" + getLayoutPosition(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(mContext, TestActivity.class);
-                    SpUtil.getInstance().save("testtype", getLayoutPosition());
+                    SpUtil.getInstance().save(Contact.TESTTYPE, getLayoutPosition()+"");
+                    SpUtil.getInstance().save(Contact.SUBJECT,"1");
+
                     mContext.startActivity(intent);
                 }
             });

@@ -25,7 +25,7 @@ import huiiuh.com.driverfly.R;
  */
 public class JiakaoFragment extends BaseFragment {
 
-    private ViewPager mViewpager_jiakao;
+    public ViewPager mViewpager_jiakao;
     private TabLayout mTablayout;
     private ArrayList<Fragment> mFragments;
     private String[] mTitles;

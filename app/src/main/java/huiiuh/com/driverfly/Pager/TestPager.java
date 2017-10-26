@@ -12,8 +12,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import huiiuh.com.driverfly.Activity.TestActivity;
 import huiiuh.com.driverfly.Base.BaseFragment;
-import huiiuh.com.driverfly.Bean.DataBean;
+import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Model.bean.DataBean;
+import huiiuh.com.driverfly.Model.bean.TestInfoBean;
+import huiiuh.com.driverfly.Model.dao.TestInfoDao;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
 
@@ -70,6 +74,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     private LinearLayout mLine_option4;
     private LinearLayout mLine_questionAll;
     private String check;
+    private int trueOrFalse;
 
 
     public TestPager(List<DataBean.ResultBeanX.ResultBean.ListBean> list, int position) {
@@ -87,23 +92,23 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         return mTest_pager;
     }
 
-    private void readstate() {
-        int testedquestion = SpUtil.getInstance().getInt("testedquestionnum", 0);
-        if (testedquestion != 0) {
-
-            String sp_check = SpUtil.getInstance().getString("testedquestionanswer", "A");
-
-            String[] split = sp_check.split(",");
-
-            if (split[position].equals(mAnswer)) {
-                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_currect);
-            } else {
-                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_wrong);
-
-            }
-        }
-
-    }
+//    private void readstate() {
+//        int testedquestion = SpUtil.getInstance().getInt("testedquestionnum", 0);
+//        if (testedquestion != 0) {
+//
+//            String sp_check = SpUtil.getInstance().getString("testedquestionanswer", "A");
+//
+//            String[] split = sp_check.split(",");
+//
+//            if (split[position].equals(mAnswer)) {
+//                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_currect);
+//            } else {
+//                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_wrong);
+//
+//            }
+//        }
+//
+//    }
 
 
     private void findview() {
@@ -131,7 +136,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mLine_option4.setOnClickListener(this);
         mLine_explain = (LinearLayout) mTest_pager.findViewById(R.id.line_explain);
         mProgressBar = (ProgressBar) mTest_pager.findViewById(R.id.progressBar);
-        if (SpUtil.getInstance().getBoolean("isdati", true)) {
+        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
             mLine_explain.setVisibility(View.INVISIBLE);
         } else {
             mLine_explain.setVisibility(View.VISIBLE);
@@ -156,8 +161,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     }
 
     private void setData() {
-
         processData(list);
+
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mTest_question.setText(mQuestion);
@@ -167,6 +172,84 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mTest_option4.setText(mOption4);
         mTest_daan.setText("答案：" + mAnswer);
         mTest_explain.setText("   " + mExplain);
+
+        TestInfoDao testInfoDao = new TestInfoDao(mContext);
+        if (testInfoDao.getItem("c1", "1", "c1-1-" + position) != null) {
+
+            TestInfoBean c1 = testInfoDao.getItem("c1", "1", "c1-1-" + position);
+            TestInfoBean c11 = testInfoDao.getTrueOrFalse("c1", "1", "c1-1-" + position);
+
+            String item = c1.getItem();
+            String trueorfalse = c11.getTrueOrFalse();
+            loadResult(item, trueorfalse);
+        }
+    }
+
+    private void loadResult(String useranswer, String trueorfalse) {
+        if (trueorfalse.equals("0")) {
+            switch (useranswer) {
+                case "A":
+                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+                    break;
+                case "对":
+                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                    break;
+                case "B":
+                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                    break;
+                case "错":
+                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                    break;
+                case "C":
+                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                    break;
+                case "D":
+                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                    break;
+            }
+        } else if (trueorfalse.equals("1")) {
+            switch (useranswer) {
+                case "A":
+                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+                    break;
+                case "对":
+                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                    break;
+                case "B":
+                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                    break;
+                case "错":
+                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                    break;
+                case "C":
+                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                    break;
+                case "D":
+                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                    break;
+            }
+
+            mLine_option1.setEnabled(false);
+            mLine_option2.setEnabled(false);
+            mLine_option3.setEnabled(false);
+            mLine_option4.setEnabled(false);
+
+
+            showResult();
+
+        }
+
+
     }
 
 
@@ -216,10 +299,11 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             case R.id.line_option1:
                 if (mAnswer.equals("A") || mAnswer.equals("对")) {
                     mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
-                    //                    new TestActivity().mMyPagerAdapter.notifyDataSetChanged();
+                    trueOrFalse = 0;
                     goToNextViewPager();
                 } else {
                     mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+                    trueOrFalse = 1;
                 }
                 check = "A";
 
@@ -228,9 +312,11 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 if (mAnswer.equals("B") || mAnswer.equals("错")) {
                     mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
                     goToNextViewPager();
+                    trueOrFalse = 0;
 
                 } else {
                     mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+                    trueOrFalse = 1;
                 }
                 check = "B";
 
@@ -239,9 +325,11 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 if (mAnswer.equals("C")) {
                     mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
                     goToNextViewPager();
+                    trueOrFalse = 0;
 
                 } else {
                     mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
+                    trueOrFalse = 1;
                 }
                 check = "C";
 
@@ -250,15 +338,19 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 if (mAnswer.equals("D")) {
                     mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
                     goToNextViewPager();
+                    trueOrFalse = 0;
 
                 } else {
                     mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
+                    trueOrFalse = 1;
+
                 }
                 check = "D";
 
                 break;
         }
         showResult();
+        storageInfo();
 
         mLine_option1.setEnabled(false);
         mLine_option2.setEnabled(false);
@@ -295,21 +387,24 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         }
     }
 
+    private void storageInfo() {
+        TestInfoDao testInfoDao = new TestInfoDao(mContext);
+        TestInfoBean testInfoBean = new TestInfoBean();
+        testInfoBean.setType("c1");
+        testInfoBean.setSubject("1");
+        testInfoBean.setType_subject_currentItem("c1-" + "1-" + position);
+        testInfoBean.setItem(check);
+        testInfoBean.setTrueOrFalse(trueOrFalse + "");
+        testInfoDao.addTestInfo(testInfoBean);
+    }
+
     private void goToNextViewPager() {
-
-        // new TestActivity().updata(2);
-        //        if (test_viewpager.getCurrentItem() < 1310) {
-        //            test_viewpager.setCurrentItem(test_viewpager.getCurrentItem() + 1);
-        //        }
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
+        TestActivity testActivity = (TestActivity) mContext;
+        testActivity.mTest_viewpager.setCurrentItem(position + 1);
 
     }
+
+
 }
 
 

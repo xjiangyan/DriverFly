@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void ShowAndHindFragment(int num) {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = supportFragmentManager.beginTransaction();

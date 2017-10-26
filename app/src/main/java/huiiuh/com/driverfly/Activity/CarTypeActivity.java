@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import huiiuh.com.driverfly.Contact;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
 
@@ -24,7 +25,7 @@ public class CarTypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type);
-        if (!SpUtil.getInstance().getBoolean("ischoosetype", false)) {
+        if (!SpUtil.getInstance().getBoolean(Contact.ISCHOOSETYPE, false)) {
             findview();
             init();
         } else {
@@ -77,8 +78,8 @@ public class CarTypeActivity extends AppCompatActivity {
     private class Myonclick implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            SpUtil.getInstance().save("type", type);
-            SpUtil.getInstance().save("ischoosetype", true);
+            SpUtil.getInstance().save(Contact.CARTYPE, type);
+            SpUtil.getInstance().save(Contact.ISCHOOSETYPE, true);
             Toast.makeText(CarTypeActivity.this, "已选择" + type + "类车型", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplication(), MainActivity.class);
             startActivity(intent);

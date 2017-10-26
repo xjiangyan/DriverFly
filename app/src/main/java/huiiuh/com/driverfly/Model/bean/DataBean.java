@@ -1,4 +1,4 @@
-package huiiuh.com.driverfly.Bean;
+package huiiuh.com.driverfly.Model.bean;
 
 import java.util.List;
 

@@ -31,7 +31,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import huiiuh.com.driverfly.Bean.DataBean;
+import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Model.bean.DataBean;
 import huiiuh.com.driverfly.Pager.TestPager;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
@@ -59,6 +60,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public MyPagerAdapter mMyPagerAdapter;
     private List<DataBean.ResultBeanX.ResultBean.ListBean> mList;
     private PopupWindow mPopupWindow;
+    private String mTotal;
 
 
     @Override
@@ -71,26 +73,29 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
-        if (SpUtil.getInstance().getBoolean("isdati", true)) {
+        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
             mBtnDati.setChecked(true);
 
         } else {
             mBtnBeiti.setChecked(true);
 
         }
+        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
 
-        getData();
-        String type = SpUtil.getInstance().getString("type", "c1");
+        getData(cartype, subject, testtype);
+
+
         mFragments = new ArrayList<>();
-        for (int i = 0; i < 1311; i++) {
+        for (int i = 0; i < mList.size(); i++) {
 
             mFragments.add(new TestPager(mList, i));
         }
         mMyPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mTest_viewpager.setAdapter(mMyPagerAdapter);
-        mTest_viewpager.setOffscreenPageLimit(10);
 
-        int currentItem = SpUtil.getInstance().getInt("CurrentItem", 0);
+        int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
 
         mTest_viewpager.setCurrentItem(currentItem);
 
@@ -115,10 +120,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void getData() {
+    private void getData(String cartype, String subject, String testtype) {
         //读取assets下的资源文件
+
+        String url = cartype + "_" + subject + "_" + testtype + ".txt";
+        //        String url = "c1_1_0.txt";
         try {
-            InputStream is = getAssets().open("question_c1_subjectOne.txt");
+            InputStream is = getAssets().open(url);
             int lenght = 0;
 
             lenght = is.available();
@@ -139,6 +147,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private void processData(String result) {
         Gson gson = new Gson();
         DataBean dataBean = gson.fromJson(result, DataBean.class);
+        mTotal = dataBean.getResult().getResult().getTotal();
         mList = dataBean.getResult().getResult().getList();
     }
 
@@ -172,9 +181,29 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showTextSizeChangeBar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final String sizestext[] = new String[]{"0.5特小字体", "0.75小字体", "1.0普通字体", "1.2大字体", "1.5特大字体"};
         final String sizes[] = new String[]{"0.5", "0.75", "1.0", "1.2", "1.5"};
+        String textsize = SpUtil.getInstance().getString(Contact.TEXTSIZE, sizes[2]);
+        int checkedtextsize = 2;
+        switch (textsize) {
+            case "0.5":
+                checkedtextsize = 0;
+                break;
+            case "0.75":
+                checkedtextsize = 1;
+                break;
+            case "1.0":
+                checkedtextsize = 2;
+                break;
+            case "1.25":
+                checkedtextsize = 3;
+                break;
+            case "1.5":
+                checkedtextsize = 4;
+                break;
 
-        builder.setSingleChoiceItems(sizes, 2, new DialogInterface.OnClickListener() {
+        }
+        builder.setSingleChoiceItems(sizes, checkedtextsize, new DialogInterface.OnClickListener() {
             int size = 0;
 
             @Override
@@ -196,7 +225,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                         size = 4;
                         break;
                 }
-                SpUtil.getInstance().save("textsize", sizes[size]);
+                SpUtil.getInstance().save(Contact.TEXTSIZE, sizes[size]);
                 mMyPagerAdapter.notifyDataSetChanged();
             }
         }).show();
@@ -246,17 +275,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        int currentItem = SpUtil.getInstance().getInt("CurrentItem", 0);
+        int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
         if (currentItem < mTest_viewpager.getCurrentItem()) {
             currentItem = mTest_viewpager.getCurrentItem();
-            SpUtil.getInstance().save("CurrentItem", currentItem);
+            SpUtil.getInstance().save(Contact.CURRENTITEM, currentItem);
         }
         Log.d("TestActivity", "保存的item位置是" + currentItem);
     }
 
     @Override
     public Resources getResources() {
-        String textsize = SpUtil.getInstance().getString("textsize", "1.0");
+        String textsize = SpUtil.getInstance().getString(Contact.TEXTSIZE, "1.0");
         float v = Float.parseFloat(textsize);
         Resources res = super.getResources();
         Configuration config = res.getConfiguration();
