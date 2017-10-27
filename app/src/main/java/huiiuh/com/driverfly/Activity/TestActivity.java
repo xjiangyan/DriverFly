@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -59,8 +58,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mLine_explain;
     public MyPagerAdapter mMyPagerAdapter;
     private List<DataBean.ResultBeanX.ResultBean.ListBean> mList;
-    private PopupWindow mPopupWindow;
+
     private String mTotal;
+    private int num;
 
 
     @Override
@@ -70,9 +70,27 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
         findview();
         init();
+
+
+    }
+
+    private int random_num() {
+        ArrayList<Integer> list = new ArrayList<>();
+        int r = (int) (Math.random() * mList.size());
+
+        for (int v : list) {
+            if (v == r) {
+                return random_num();
+            }
+        }
+        list.add(r);
+        Log.d("TestActivity", "随机数" + r);
+        return r;
     }
 
     private void init() {
+
+
         if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
             mBtnDati.setChecked(true);
 
@@ -84,20 +102,39 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
         String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
 
-        getData(cartype, subject, testtype);
-
+        getData(cartype, subject);
 
         mFragments = new ArrayList<>();
-        for (int i = 0; i < mList.size(); i++) {
 
-            mFragments.add(new TestPager(mList, i));
+        if (testtype.equals("0")) {
+
+            for (int i = 0; i < mList.size(); i++) {
+
+                mFragments.add(new TestPager(mList, i));
+            }
+        } else if (testtype.equals("1")||testtype.equals("2")) {
+            ArrayList<Integer> randnums = new ArrayList<>();
+
+            for (int j = 0; j < mList.size(); j++) {
+                randnums.add(random_num());
+            }
+
+            for (int i = 0; i < mList.size(); i++) {
+                mFragments.add(new TestPager(mList, randnums.get(i)));
+
+            }
         }
+
+
         mMyPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mTest_viewpager.setAdapter(mMyPagerAdapter);
 
-        int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
+        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("0")) {
+            int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
 
-        mTest_viewpager.setCurrentItem(currentItem);
+            mTest_viewpager.setCurrentItem(currentItem);
+        }
+
 
         mTitlebarRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -120,11 +157,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void getData(String cartype, String subject, String testtype) {
+    private void getData(String cartype, String subject) {
+
+
+        String url = cartype + "_" + subject + "_" + "0.txt";
+        //        String url = "c1_1_0.txt";
+
         //读取assets下的资源文件
 
-        String url = cartype + "_" + subject + "_" + testtype + ".txt";
-        //        String url = "c1_1_0.txt";
         try {
             InputStream is = getAssets().open(url);
             int lenght = 0;
@@ -145,10 +185,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void processData(String result) {
+
         Gson gson = new Gson();
         DataBean dataBean = gson.fromJson(result, DataBean.class);
         mTotal = dataBean.getResult().getResult().getTotal();
         mList = dataBean.getResult().getResult().getList();
+
     }
 
     private void findview() {
@@ -263,7 +305,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public int getItemPosition(Object object) {
-
+            //刷新页面
             if (mChildCount > 0) {
                 mChildCount--;
                 return POSITION_NONE;

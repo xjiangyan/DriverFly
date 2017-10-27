@@ -33,6 +33,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
 
     private final List<DataBean.ResultBeanX.ResultBean.ListBean> list;
+
     private int position;
     private String type;
     private int subject;
@@ -92,24 +93,6 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         return mTest_pager;
     }
 
-//    private void readstate() {
-//        int testedquestion = SpUtil.getInstance().getInt("testedquestionnum", 0);
-//        if (testedquestion != 0) {
-//
-//            String sp_check = SpUtil.getInstance().getString("testedquestionanswer", "A");
-//
-//            String[] split = sp_check.split(",");
-//
-//            if (split[position].equals(mAnswer)) {
-//                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_currect);
-//            } else {
-//                mLine_questionAll.getChildAt(5).setBackgroundResource(R.drawable.ic_answer_wrong);
-//
-//            }
-//        }
-//
-//    }
-
 
     private void findview() {
         mTest_question = (TextView) mTest_pager.findViewById(R.id.test_question);
@@ -150,17 +133,29 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         super.initData();
         setData();
 
-        // readstate();
 
     }
 
     @Override
     protected void loadData() {
 
+        //        setData();
 
     }
 
     private void setData() {
+        TestInfoDao testInfoDao = new TestInfoDao(mContext);
+        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+
+        //        TestActivity testActivity = (TestActivity) mContext;
+        //
+        //        if (testtype.equals("0")) {
+        //            currentItemPoint = position;
+        //        } else if (testtype.equals("1")) {
+        //            currentItemPoint = randnum;
+        //        }
         processData(list);
 
 
@@ -173,11 +168,11 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mTest_daan.setText("答案：" + mAnswer);
         mTest_explain.setText("   " + mExplain);
 
-        TestInfoDao testInfoDao = new TestInfoDao(mContext);
-        if (testInfoDao.getItem("c1", "1", "c1-1-" + position) != null) {
 
-            TestInfoBean c1 = testInfoDao.getItem("c1", "1", "c1-1-" + position);
-            TestInfoBean c11 = testInfoDao.getTrueOrFalse("c1", "1", "c1-1-" + position);
+        if (testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position) != null) {
+
+            TestInfoBean c1 = testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
+            TestInfoBean c11 = testInfoDao.getTrueOrFalse(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
 
             String item = c1.getItem();
             String trueorfalse = c11.getTrueOrFalse();
@@ -254,6 +249,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
 
     private void processData(List<DataBean.ResultBeanX.ResultBean.ListBean> data) {
+
         mChapter = data.get(position).getChapter();
         mQuestion = data.get(position).getQuestion();
         mPic = data.get(position).getPic();
@@ -350,7 +346,10 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 break;
         }
         showResult();
+
+
         storageInfo();
+
 
         mLine_option1.setEnabled(false);
         mLine_option2.setEnabled(false);
@@ -388,11 +387,21 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     }
 
     private void storageInfo() {
+        TestActivity testActivity = (TestActivity) mContext;
+
+        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
         TestInfoDao testInfoDao = new TestInfoDao(mContext);
         TestInfoBean testInfoBean = new TestInfoBean();
-        testInfoBean.setType("c1");
-        testInfoBean.setSubject("1");
-        testInfoBean.setType_subject_currentItem("c1-" + "1-" + position);
+        testInfoBean.setType(cartype);
+        testInfoBean.setSubject(subject);
+        //        if (testtype.equals("0")) {
+        //            currentItemPoint = position;
+        //        } else if (testtype.equals("1")) {
+        //            currentItemPoint = randnum;
+        //        }
+        testInfoBean.setType_subject_currentItem(cartype + "-" + subject + "-" + testtype + "-" + position);
         testInfoBean.setItem(check);
         testInfoBean.setTrueOrFalse(trueOrFalse + "");
         testInfoDao.addTestInfo(testInfoBean);
@@ -400,11 +409,18 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
     private void goToNextViewPager() {
         TestActivity testActivity = (TestActivity) mContext;
-        testActivity.mTest_viewpager.setCurrentItem(position + 1);
-
+        //        testActivity.mTest_viewpager.setCurrentItem(position + 1);
+        testActivity.mTest_viewpager.setCurrentItem(testActivity.mTest_viewpager.getCurrentItem() + 1);
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+        TestInfoDao testInfoDao = new TestInfoDao(mContext);
+        testInfoDao.deleteDataByTesttype(cartype,subject);
+    }
 }
 
 
