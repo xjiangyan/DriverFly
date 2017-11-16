@@ -1,7 +1,10 @@
 package huiiuh.com.driverfly.Pager;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -12,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import huiiuh.com.driverfly.Activity.ResultActivity;
 import huiiuh.com.driverfly.Activity.TestActivity;
 import huiiuh.com.driverfly.Base.BaseFragment;
 import huiiuh.com.driverfly.Contact;
@@ -20,6 +24,8 @@ import huiiuh.com.driverfly.Model.bean.TestInfoBean;
 import huiiuh.com.driverfly.Model.dao.TestInfoDao;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
+
+import static huiiuh.com.driverfly.R.id.line_option1;
 
 
 /**
@@ -76,12 +82,20 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     private LinearLayout mLine_questionAll;
     private String check;
     private int trueOrFalse;
-
+    private Button mBtn_mult_check;
+    private String mQuestion_type;
+    boolean line_option1_selected = false;
+    boolean line_option2_selected = false;
+    boolean line_option3_selected = false;
+    boolean line_option4_selected = false;
+    private ImageView mIv_questiontype;
+    String multcheck = "";
 
     public TestPager(List<DataBean.ResultBeanX.ResultBean.ListBean> list, int position) {
         super();
         this.list = list;
         this.position = position;
+
     }
 
 
@@ -107,23 +121,22 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mTest_pic = (ImageView) this.mTest_pager.findViewById(R.id.test_pic);
         mTest_daan = (TextView) this.mTest_pager.findViewById(R.id.test_daan);
         mTest_explain = (TextView) this.mTest_pager.findViewById(R.id.test_explain);
-        mLine_option1 = (LinearLayout) mTest_pager.findViewById(R.id.line_option1);
+        mLine_option1 = (LinearLayout) mTest_pager.findViewById(line_option1);
         mLine_option2 = (LinearLayout) mTest_pager.findViewById(R.id.line_option2);
         mLine_option3 = (LinearLayout) mTest_pager.findViewById(R.id.line_option3);
         mLine_option4 = (LinearLayout) mTest_pager.findViewById(R.id.line_option4);
         mLine_questionAll = (LinearLayout) mTest_pager.findViewById(R.id.line_questionAll);
+        mBtn_mult_check = (Button) mTest_pager.findViewById(R.id.btn_mult_check);
+        mIv_questiontype = (ImageView) mTest_pager.findViewById(R.id.iv_questiontype);
 
         mLine_option1.setOnClickListener(this);
         mLine_option2.setOnClickListener(this);
         mLine_option3.setOnClickListener(this);
         mLine_option4.setOnClickListener(this);
+        mBtn_mult_check.setOnClickListener(new MultOnClick());
+
         mLine_explain = (LinearLayout) mTest_pager.findViewById(R.id.line_explain);
         mProgressBar = (ProgressBar) mTest_pager.findViewById(R.id.progressBar);
-        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
-            mLine_explain.setVisibility(View.INVISIBLE);
-        } else {
-            mLine_explain.setVisibility(View.VISIBLE);
-        }
 
 
     }
@@ -149,15 +162,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
         String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
 
-        //        TestActivity testActivity = (TestActivity) mContext;
-        //
-        //        if (testtype.equals("0")) {
-        //            currentItemPoint = position;
-        //        } else if (testtype.equals("1")) {
-        //            currentItemPoint = randnum;
-        //        }
-        processData(list);
 
+        processData(list);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mTest_question.setText(mQuestion);
@@ -172,11 +178,22 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         if (testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position) != null) {
 
             TestInfoBean c1 = testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
-            TestInfoBean c11 = testInfoDao.getTrueOrFalse(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
+            TestInfoBean c11 = testInfoDao.getTrueOrFalseByAll(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
 
             String item = c1.getItem();
             String trueorfalse = c11.getTrueOrFalse();
             loadResult(item, trueorfalse);
+        }
+        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
+            mLine_explain.setVisibility(View.INVISIBLE);
+
+        } else {
+            showResult();
+            mLine_explain.setVisibility(View.VISIBLE);
+            mLine_option1.setEnabled(false);
+            mLine_option2.setEnabled(false);
+            mLine_option3.setEnabled(false);
+            mLine_option4.setEnabled(false);
         }
     }
 
@@ -261,10 +278,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             mOption3 = splitData(data.get(position).getOption3());
             mOption4 = splitData(data.get(position).getOption4());
         } else if (data.get(position).getOption1().length() == 0) {
-            //            mTest_option3.setVisibility(View.GONE);
-            //            mTest_option4.setVisibility(View.GONE);
-            //            mIv_option3.setVisibility(View.GONE);
-            //            mIv_option4.setVisibility(View.GONE);
+
             mLine_option3.setVisibility(View.GONE);
             mLine_option4.setVisibility(View.GONE);
             mOption1 = "对";
@@ -272,6 +286,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         }
         mAnswer = data.get(position).getAnswer();
         mExplain = data.get(position).getExplain();
+        judgeQuestionType(mAnswer);
 
         if (data.get(position).getPic() != null && data.get(position).getPic().length() > 0) {
             mPic = data.get(position).getPic();
@@ -280,6 +295,32 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         }
 
 
+    }
+
+    /**
+     * 判断题目类型
+     *
+     * @param answer
+     */
+    private void judgeQuestionType(String answer) {
+        if (answer.length() > 1) {
+            SpUtil.getInstance().save(Contact.QUESTION_TYPE, "1");
+            mIv_questiontype.setImageResource(R.drawable.jiakao_practise_duoxuanti_day);
+
+        } else {
+            if (answer.equals("对") || answer.equals("错")) {
+                mIv_questiontype.setImageResource(R.drawable.jiakao_practise_panduanti_day);
+            } else {
+                mIv_questiontype.setImageResource(R.drawable.jiakao_practise_danxuanti_day);
+
+            }
+            SpUtil.getInstance().save(Contact.QUESTION_TYPE, "0");
+
+        }
+        mQuestion_type = SpUtil.getInstance().getString(Contact.QUESTION_TYPE, "0");
+        if (mQuestion_type.equals("1")) {
+            mBtn_mult_check.setVisibility(View.VISIBLE);
+        }
     }
 
     private String splitData(String data) {
@@ -291,75 +332,176 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.line_option1:
-                if (mAnswer.equals("A") || mAnswer.equals("对")) {
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
-                    trueOrFalse = 0;
-                    goToNextViewPager();
-                } else {
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
-                    trueOrFalse = 1;
-                }
-                check = "A";
+        if (mQuestion_type.equals("0")) {
+            //单选的情况
+            switch (view.getId()) {
+                case line_option1:
+                    if (mAnswer.equals("A") || mAnswer.equals("对")) {
+                        mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+                        trueOrFalse = 0;
+                        goToNextViewPager();
+                    } else {
+                        mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+                        trueOrFalse = 1;
+                    }
+                    check = "A";
 
-                break;
-            case R.id.line_option2:
-                if (mAnswer.equals("B") || mAnswer.equals("错")) {
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
-                    goToNextViewPager();
-                    trueOrFalse = 0;
+                    break;
+                case R.id.line_option2:
+                    if (mAnswer.equals("B") || mAnswer.equals("错")) {
+                        mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+                        goToNextViewPager();
+                        trueOrFalse = 0;
 
-                } else {
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
-                    trueOrFalse = 1;
-                }
-                check = "B";
+                    } else {
+                        mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+                        trueOrFalse = 1;
+                    }
+                    check = "B";
 
-                break;
-            case R.id.line_option3:
-                if (mAnswer.equals("C")) {
-                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
-                    goToNextViewPager();
-                    trueOrFalse = 0;
+                    break;
+                case R.id.line_option3:
+                    if (mAnswer.equals("C")) {
+                        mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
+                        goToNextViewPager();
+                        trueOrFalse = 0;
 
-                } else {
-                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
-                    trueOrFalse = 1;
-                }
-                check = "C";
+                    } else {
+                        mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
+                        trueOrFalse = 1;
+                    }
+                    check = "C";
 
-                break;
-            case R.id.line_option4:
-                if (mAnswer.equals("D")) {
-                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
-                    goToNextViewPager();
-                    trueOrFalse = 0;
+                    break;
+                case R.id.line_option4:
+                    if (mAnswer.equals("D")) {
+                        mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
+                        goToNextViewPager();
+                        trueOrFalse = 0;
 
-                } else {
-                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
-                    trueOrFalse = 1;
+                    } else {
+                        mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
+                        trueOrFalse = 1;
 
-                }
-                check = "D";
+                    }
+                    check = "D";
 
-                break;
+                    break;
+
+            }
+            showResult();
+            storageInfo();
+
+
+            TestActivity testActivity = (TestActivity) mContext;
+
+            if (!testActivity.mIv_timestart.isEnabled()) {
+
+                testActivity.mIv_timestart.setEnabled(true);
+                testActivity.StartOrStopTimer();
+            }
+            showIfFinishedTest();
+
+            mLine_option1.setEnabled(false);
+            mLine_option2.setEnabled(false);
+            mLine_option3.setEnabled(false);
+            mLine_option4.setEnabled(false);
+        } else if (mQuestion_type.equals("1")) {
+            //多选的情况
+
+            switch (view.getId()) {
+                case line_option1:
+                    if (mLine_option1.isEnabled()) {
+
+                        if (!line_option1_selected) {
+
+                            mLine_option1.setBackgroundColor(Color.GRAY);
+                        } else {
+                            mLine_option1.setBackgroundColor(Color.TRANSPARENT);
+
+                        }
+                        line_option1_selected = !line_option1_selected;
+                    }
+
+                    break;
+                case R.id.line_option2:
+                    if (mLine_option2.isEnabled()) {
+
+                        if (!line_option2_selected) {
+
+                            mLine_option2.setBackgroundColor(Color.GRAY);
+                        } else {
+                            mLine_option2.setBackgroundColor(Color.TRANSPARENT);
+
+                        }
+                        line_option2_selected = !line_option2_selected;
+                    }
+                    break;
+                case R.id.line_option3:
+                    if (mLine_option3.isEnabled()) {
+
+                        if (!line_option3_selected) {
+
+                            mLine_option3.setBackgroundColor(Color.GRAY);
+                        } else {
+                            mLine_option3.setBackgroundColor(Color.TRANSPARENT);
+
+                        }
+                        line_option3_selected = !line_option3_selected;
+                    }
+                    break;
+                case R.id.line_option4:
+                    if (mLine_option4.isEnabled()) {
+
+                        if (!line_option4_selected) {
+
+                            mLine_option4.setBackgroundColor(Color.GRAY);
+                        } else {
+                            mLine_option4.setBackgroundColor(Color.TRANSPARENT);
+
+                        }
+                        line_option4_selected = !line_option4_selected;
+                    }
+                    break;
+            }
         }
-        showResult();
+    }
 
 
-        storageInfo();
+    private void showIfFinishedTest() {
+        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("2")) {
+            String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+            String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+            String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
 
-
-        mLine_option1.setEnabled(false);
-        mLine_option2.setEnabled(false);
-        mLine_option3.setEnabled(false);
-        mLine_option4.setEnabled(false);
+            TestInfoDao testInfoDao = new TestInfoDao(mContext);
+            int falsenum = testInfoDao.getTrueOrFalseByLitter(cartype, subject, cartype + "-" + subject + "-" + testtype, "1");
+            if (falsenum > 10) {
+                Intent intent = new Intent(mContext, ResultActivity.class);
+                startActivity(intent);
+                mContext.finish();
+            }
+        }
     }
 
     private void showResult() {
         mLine_explain.setVisibility(View.VISIBLE);
-        switch (mAnswer.toString()) {
+        if (mAnswer.length() < 2) {
+            showSingleResult(mAnswer);
+
+        } else if (mAnswer.length() > 1) {
+            String[] answers = new String[mAnswer.length()];
+
+            for (int i = 0; i < mAnswer.length(); i++) {
+                answers[i] = mAnswer.substring(i, i + 1);
+                Log.d("TestPager", "答案是" + answers[i]);
+                showSingleResult(answers[i]);
+            }
+        }
+    }
+
+    private void showSingleResult(String answer) {
+        switch (answer.toString()) {
             case "A":
                 mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
                 break;
@@ -396,11 +538,6 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         TestInfoBean testInfoBean = new TestInfoBean();
         testInfoBean.setType(cartype);
         testInfoBean.setSubject(subject);
-        //        if (testtype.equals("0")) {
-        //            currentItemPoint = position;
-        //        } else if (testtype.equals("1")) {
-        //            currentItemPoint = randnum;
-        //        }
         testInfoBean.setType_subject_currentItem(cartype + "-" + subject + "-" + testtype + "-" + position);
         testInfoBean.setItem(check);
         testInfoBean.setTrueOrFalse(trueOrFalse + "");
@@ -408,6 +545,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     }
 
     private void goToNextViewPager() {
+
         TestActivity testActivity = (TestActivity) mContext;
         //        testActivity.mTest_viewpager.setCurrentItem(position + 1);
         testActivity.mTest_viewpager.setCurrentItem(testActivity.mTest_viewpager.getCurrentItem() + 1);
@@ -418,8 +556,55 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         super.onDestroy();
         String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
         String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+
+
         TestInfoDao testInfoDao = new TestInfoDao(mContext);
-        testInfoDao.deleteDataByTesttype(cartype,subject);
+        testInfoDao.deleteDataByTesttype(cartype, subject, testtype);
+    }
+
+    private class MultOnClick implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (line_option1_selected) {
+                multcheck = multcheck + "A";
+            }
+            if (line_option2_selected) {
+                multcheck = multcheck + "B";
+
+            }
+            if (line_option3_selected) {
+                multcheck = multcheck + "C";
+
+            }
+            if (line_option4_selected) {
+                multcheck = multcheck + "D";
+
+            }
+            if (multcheck.equals(answer)) {
+                trueOrFalse = 0;
+            } else {
+                trueOrFalse = 1;
+            }
+            mLine_option1.setEnabled(false);
+            mLine_option2.setEnabled(false);
+            mLine_option3.setEnabled(false);
+            mLine_option4.setEnabled(false);
+
+            String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+            String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
+            String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+            TestInfoDao testInfoDao = new TestInfoDao(mContext);
+            TestInfoBean testInfoBean = new TestInfoBean();
+            testInfoBean.setType(cartype);
+            testInfoBean.setSubject(subject);
+            testInfoBean.setType_subject_currentItem(cartype + "-" + subject + "-" + testtype + "-" + position);
+            testInfoBean.setItem(multcheck);
+            testInfoBean.setTrueOrFalse(trueOrFalse + "");
+            testInfoDao.addTestInfo(testInfoBean);
+            showResult();
+
+        }
     }
 }
 

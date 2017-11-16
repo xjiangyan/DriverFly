@@ -10,11 +10,13 @@ import android.view.View;
 import java.util.ArrayList;
 
 import huiiuh.com.driverfly.Base.BaseFragment;
+import huiiuh.com.driverfly.Contact;
 import huiiuh.com.driverfly.Pager.Subject_Four;
 import huiiuh.com.driverfly.Pager.Subject_One;
 import huiiuh.com.driverfly.Pager.Subject_Three;
 import huiiuh.com.driverfly.Pager.Subject_Two;
 import huiiuh.com.driverfly.R;
+import huiiuh.com.driverfly.Util.SpUtil;
 
 /**
  * @author Admin
@@ -37,7 +39,23 @@ public class JiakaoFragment extends BaseFragment {
         findView();
         mViewpager_jiakao.setAdapter(new MyAdapter(getFragmentManager()));
         mTablayout.setupWithViewPager(mViewpager_jiakao);
+        mViewpager_jiakao.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                SpUtil.getInstance().save(Contact.SUBJECT, position + 1 + "");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         return mView;
     }
 
@@ -49,7 +67,7 @@ public class JiakaoFragment extends BaseFragment {
         mFragments.add(new Subject_Two());
         mFragments.add(new Subject_Three());
         mFragments.add(new Subject_Four());
-        mTitles = new String[]{"科目一", "科目二", "科目三", "科目四","公交"};
+        mTitles = new String[]{"科目一", "科目二", "科目三", "科目四", "公交"};
     }
 
     @Override

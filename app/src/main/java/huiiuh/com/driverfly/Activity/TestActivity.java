@@ -1,9 +1,13 @@
 package huiiuh.com.driverfly.Activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,7 +30,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,6 +42,8 @@ import huiiuh.com.driverfly.Model.bean.DataBean;
 import huiiuh.com.driverfly.Pager.TestPager;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
+
+import static android.widget.Toast.makeText;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,10 +66,53 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private List<Fragment> mFragments;
     private LinearLayout mLine_explain;
     public MyPagerAdapter mMyPagerAdapter;
-    private List<DataBean.ResultBeanX.ResultBean.ListBean> mList;
+    public List<DataBean.ResultBeanX.ResultBean.ListBean> mList;
 
     private String mTotal;
     private int num;
+
+    private boolean isLastPage = false;
+    private boolean isDragPage = false;
+    private boolean canJumpPage = true;
+
+    private RelativeLayout mRela_extraarea;
+    private LinearLayout mLine_timer;
+    private int mTimers = 2700000;
+    private TextView mTv_timer;
+    public ImageView mIv_timestart;
+    private TextView mTv_finishtest;
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            mTimers = mTimers - 1000;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+            String time = simpleDateFormat.format(new Date(mTimers));
+            if (mTimers < 10000) {
+                mTv_timer.setTextColor(Color.RED);
+            }
+            mTv_timer.setText(time);
+            mHandler.removeMessages(0);
+            mHandler.sendEmptyMessageDelayed(1, 1000);
+            if (mTimers <= 0) {
+
+                mHandler.removeCallbacksAndMessages(null);
+                finishTestAndShowScore();
+            }
+        }
+    };
+
+
+    /**
+     * 结束答题并且显示成绩
+     */
+    private void finishTestAndShowScore() {
+        Intent intent = new Intent(getApplication(), ResultActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
 
 
     @Override
@@ -74,13 +126,18 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private int random_num() {
+    /**
+     * 生成随机数
+     *
+     * @return
+     */
+    private int random_num(int i) {
         ArrayList<Integer> list = new ArrayList<>();
-        int r = (int) (Math.random() * mList.size());
+        int r = (int) (Math.random() * i);
 
         for (int v : list) {
             if (v == r) {
-                return random_num();
+                return random_num(i);
             }
         }
         list.add(r);
@@ -112,26 +169,71 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
                 mFragments.add(new TestPager(mList, i));
             }
-        } else if (testtype.equals("1")||testtype.equals("2")) {
+        } else if (testtype.equals("1")) {
             ArrayList<Integer> randnums = new ArrayList<>();
 
             for (int j = 0; j < mList.size(); j++) {
-                randnums.add(random_num());
+                randnums.add(random_num(mList.size()));
             }
 
             for (int i = 0; i < mList.size(); i++) {
                 mFragments.add(new TestPager(mList, randnums.get(i)));
 
             }
+        } else if (testtype.equals("2")) {
+            ArrayList<Integer> randnums = new ArrayList<>();
+
+            for (int j = 0; j < 100; j++) {
+
+                randnums.add(random_num(100));
+            }
+
+            for (int i = 0; i < 100; i++) {
+
+                mFragments.add(new TestPager(mList, randnums.get(i)));
+
+            }
+
+            //初始化计时器
+            mRela_extraarea.setVisibility(View.VISIBLE);
+            mTitlebarRg.setVisibility(View.INVISIBLE);
+            mHandler.sendEmptyMessageDelayed(0, 1000);
         }
 
 
         mMyPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mTest_viewpager.setAdapter(mMyPagerAdapter);
+        //判断viewpager是否是最后一页，是的话向左滑动进入下一页
+        mTest_viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (isLastPage && isDragPage && positionOffsetPixels == 0) {   //当前页是最后一页，并且是拖动状态，并且像素偏移量为0
+                    if (canJumpPage) {
 
+                        canJumpPage = false;
+                        JumpToNext();
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                isLastPage = position == mList.size() - 1;
+            }
+
+            /*
+             在手指操作屏幕的时候发生变化
+             @param state   有三个值：0（END）,1(PRESS) , 2(UP) 。
+             */
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                isDragPage = state == 1;
+            }
+        });
         if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("0")) {
             int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
 
+            //            mTest_viewpager.setCurrentItem(currentItem);
             mTest_viewpager.setCurrentItem(currentItem);
         }
 
@@ -141,19 +243,27 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                 switch (i) {
                     case R.id.btn_dati:
-                        Toast.makeText(getApplicationContext(), "答题", Toast.LENGTH_SHORT).show();
-                        SpUtil.getInstance().save("isdati", true);
+                        makeText(getApplicationContext(), "答题", Toast.LENGTH_SHORT).show();
+                        SpUtil.getInstance().save(Contact.ISDATI, true);
                         mMyPagerAdapter.notifyDataSetChanged();
                         break;
                     case R.id.btn_beiti:
-                        Toast.makeText(getApplicationContext(), "背题", Toast.LENGTH_SHORT).show();
-                        SpUtil.getInstance().save("isdati", false);
+                        makeText(getApplicationContext(), "背题", Toast.LENGTH_SHORT).show();
+                        SpUtil.getInstance().save(Contact.ISDATI, false);
                         mMyPagerAdapter.notifyDataSetChanged();
 
                         break;
                 }
             }
         });
+    }
+
+    private void JumpToNext() {
+        Intent intent = new Intent(TestActivity.this, ResultActivity.class);
+        startActivity(intent);
+        TestActivity.this.overridePendingTransition(R.anim.next_in, R.anim.next_out);
+        finish();
+        makeText(this, "已经是最后一页了！", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -190,15 +300,26 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         DataBean dataBean = gson.fromJson(result, DataBean.class);
         mTotal = dataBean.getResult().getResult().getTotal();
         mList = dataBean.getResult().getResult().getList();
+        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("2")) {
+            SpUtil.getInstance().save(Contact.LISTNUM, 100 + "");
 
+        } else {
+            SpUtil.getInstance().save(Contact.LISTNUM, mList.size() + "");
+
+        }
     }
 
     private void findview() {
 
         mTest_viewpager = (ViewPager) findViewById(R.id.test_viewpager);
         mLine_explain = (LinearLayout) findViewById(R.id.line_explain);
-
-
+        mRela_extraarea = (RelativeLayout) findViewById(R.id.rela_extraarea);
+        mLine_timer = (LinearLayout) findViewById(R.id.line_timer);
+        mTv_timer = (TextView) findViewById(R.id.tv_timer);
+        mIv_timestart = (ImageView) findViewById(R.id.iv_timestart);
+        mTv_finishtest = (TextView) findViewById(R.id.tv_finishtest);
+        mTv_finishtest.setOnClickListener(this);
+        mLine_timer.setOnClickListener(this);
         mTitleBack.setOnClickListener(this);
         mTitleFunction.setOnClickListener(this);
         mTitleName.setVisibility(View.INVISIBLE);
@@ -217,9 +338,62 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.titleFunction:
                 showTextSizeChangeBar();
                 break;
+            case R.id.line_timer:
+                mIv_timestart.setEnabled(!mIv_timestart.isEnabled());
+                StartOrStopTimer();
 
+                break;
+            case R.id.tv_finishtest:
+                showFinishMessage();
+                if (mIv_timestart.isEnabled()) {
+                    mIv_timestart.setEnabled(false);
+
+                    StartOrStopTimer();
+                }
+
+                break;
         }
     }
+
+
+    public void StartOrStopTimer() {
+        if (!mIv_timestart.isEnabled()) {
+
+            mHandler.removeCallbacksAndMessages(null);
+        } else {
+            if (mTimers > 0)
+                mHandler.sendEmptyMessage(0);
+        }
+    }
+
+    /**
+     * 提交答卷的提示框
+     */
+    private void showFinishMessage() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("确定提交试卷结束答题？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getApplication(), ResultActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                mIv_timestart.setEnabled(true);
+                StartOrStopTimer();
+
+            }
+        });
+
+        builder.show();
+    }
+
 
     private void showTextSizeChangeBar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -312,7 +486,36 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             }
             return super.getItemPosition(object);
         }
+
+
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            showGoOutMessage();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
+    private void showGoOutMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("确定要退出答题吗？");
+        builder.setTitle("提示");
+        builder.setNegativeButton("取消", null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        builder.show();
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -323,6 +526,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             SpUtil.getInstance().save(Contact.CURRENTITEM, currentItem);
         }
         Log.d("TestActivity", "保存的item位置是" + currentItem);
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        canJumpPage = true;
     }
 
     @Override
@@ -331,7 +541,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         float v = Float.parseFloat(textsize);
         Resources res = super.getResources();
         Configuration config = res.getConfiguration();
-        config.fontScale = v; //1 设置正常字体大小的倍数
+        config.fontScale = v; //1 设置正常字体大小的倍数sp为单位的
         res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
 

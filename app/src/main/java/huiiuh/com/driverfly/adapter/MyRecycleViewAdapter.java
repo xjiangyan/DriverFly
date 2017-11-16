@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import huiiuh.com.driverfly.Activity.IntroduceActivity;
 import huiiuh.com.driverfly.Activity.TestActivity;
 import huiiuh.com.driverfly.Contact;
 import huiiuh.com.driverfly.R;
@@ -54,13 +55,21 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<MyRecycleViewAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (getLayoutPosition() == 2) {
 
-                    Toast.makeText(mContext, "点击了" + getLayoutPosition(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(mContext, TestActivity.class);
-                    SpUtil.getInstance().save(Contact.TESTTYPE, getLayoutPosition()+"");
-                    SpUtil.getInstance().save(Contact.SUBJECT,"1");
+                        Intent intent = new Intent(mContext, IntroduceActivity.class);
+                        mContext.startActivity(intent);
+                        SpUtil.getInstance().save(Contact.TESTTYPE, "2");
+//                        SpUtil.getInstance().save(Contact.SUBJECT, "1");
 
-                    mContext.startActivity(intent);
+                    } else {
+
+                        Toast.makeText(mContext, "点击了" + getLayoutPosition(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(mContext, TestActivity.class);
+                        SpUtil.getInstance().save(Contact.TESTTYPE, getLayoutPosition() + "");
+//                        SpUtil.getInstance().save(Contact.SUBJECT, "1");
+                        mContext.startActivity(intent);
+                    }
                 }
             });
         }

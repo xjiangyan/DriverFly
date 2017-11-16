@@ -10,16 +10,71 @@
     <include layout="@layout/titlebar"></include>
 
     <!--<FrameLayout-->
-        <!--android:id="@+id/frame_testcontain"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <!--android:id="@+id/frame_testcontain"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
 
     <!--</FrameLayout>-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/test_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     </android.support.v4.view.ViewPager>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/darker_gray"></View>
+
+    <RelativeLayout
+        android:id="@+id/rela_extraarea"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/line_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/boder">
+
+
+            <ImageView
+                android:id="@+id/iv_timestart"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:src="@drawable/starttestorstoptest_selector"/>
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="3dp"
+                android:text="45:00"
+                android:textSize="15sp"
+                android:textColor="@android:color/black"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_finishtest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/line_timer"
+            android:background="@drawable/boder"
+            android:padding="6dp"
+            android:text="立即交卷"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"/>
+    </RelativeLayout>
 </LinearLayout>

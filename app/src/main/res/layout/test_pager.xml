@@ -19,9 +19,12 @@
             android:orientation="vertical">
 
             <ImageView
-
+                android:id="@+id/iv_questiontype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/jiakao_practise_danxuanti_day"
                 />
 
             <TextView
@@ -37,52 +40,25 @@
                 android:id="@+id/test_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"/>
 
-            <!--<RadioGroup-->
-            <!--android:id="@+id/rg_testOption"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<RadioButton-->
-            <!--android:id="@+id/test_Option1"-->
-            <!--style="@style/test_style"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:drawableLeft="@drawable/selector_a_icon"-->
-            <!--/>-->
-
-            <!--<RadioButton-->
-            <!--android:id="@+id/test_Option2"-->
-            <!--style="@style/test_style"-->
-            <!--android:drawableLeft="@drawable/selector_b_icon"-->
-            <!--/>-->
-
-            <!--<RadioButton-->
-            <!--android:id="@+id/test_Option3"-->
-            <!--style="@style/test_style"-->
-            <!--android:drawableLeft="@drawable/selector_c_icon"-->
-            <!--/>-->
-
-            <!--<RadioButton-->
-            <!--android:id="@+id/test_Option4"-->
-            <!--style="@style/test_style"-->
-            <!--android:drawableLeft="@drawable/selector_d_icon"-->
-            <!--/>-->
-
-            <!--</RadioGroup>-->
             <LinearLayout
-                android:id="@+id/line_option1"
 
+                android:id="@+id/line_option1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_option1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/selector_a_icon"/>
 
                 <TextView
@@ -98,18 +74,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_option2"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/selector_b_icon"/>
 
                 <TextView
                     android:id="@+id/test_Option2"
-
                     style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -117,22 +97,25 @@
 
             <LinearLayout
                 android:id="@+id/line_option3"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+
                 android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_option3"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/selector_c_icon"/>
 
                 <TextView
                     android:id="@+id/test_Option3"
-
                     style="@style/test_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -140,17 +123,21 @@
 
             <LinearLayout
                 android:id="@+id/line_option4"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_option4"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/selector_d_icon"/>
 
                 <TextView
@@ -160,9 +147,18 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_mult_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_type"
+                android:text="确定"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:id="@+id/line_explain"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
