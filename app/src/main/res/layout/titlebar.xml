@@ -21,6 +21,17 @@
             android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
             android:visibility="invisible"/>
 
+        <TextView
+            android:id="@+id/tv_changecartype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_horizontal"
+            android:visibility="invisible"
+            />
+
         <RadioGroup
             android:id="@+id/titlebar_rg"
             android:layout_width="wrap_content"

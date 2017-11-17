@@ -19,21 +19,23 @@ public class CarTypeActivity extends AppCompatActivity {
 
     private RadioGroup mRg_type;
     private Button mBtn_typecheck;
-    private String type ="c1";
+    private String type = "c1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type);
-        if (!SpUtil.getInstance().getBoolean(Contact.ISCHOOSETYPE, false)) {
-            findview();
-            init();
-        } else {
-            Intent intent = new Intent(getApplication(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
+        //        if (!SpUtil.getInstance().getBoolean(Contact.ISCHOOSETYPE, false)) {
+        //            findview();
+        //            init();
+        //        }
+        //        else {
+        //            Intent intent = new Intent(getApplication(), MainActivity.class);
+        //            startActivity(intent);
+        //            finish();
+        //        }
+        findview();
+        init();
     }
 
     private void init() {
@@ -60,16 +62,16 @@ public class CarTypeActivity extends AppCompatActivity {
         public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
             switch (i) {
                 case R.id.rb_xiaoche:
-                    type ="c1";
+                    type = "c1";
                     break;
                 case R.id.rb_huoche:
-                    type ="a2";
+                    type = "a2";
                     break;
                 case R.id.rb_keche:
                     type = "b1";
                     break;
                 case R.id.rb_motuo:
-                    type ="d";
+                    type = "d";
                     break;
             }
         }

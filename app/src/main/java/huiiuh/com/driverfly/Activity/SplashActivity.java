@@ -30,9 +30,20 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         if (SpUtil.getInstance().getBoolean(Contact.ISUSED, false)) {
-            Intent intent = new Intent(getApplication(), CarTypeActivity.class);
-            startActivity(intent);
-            finish();
+            //            Intent intent = new Intent(getApplication(), CarTypeActivity.class);
+            //            startActivity(intent);
+            //            finish();
+            if (!SpUtil.getInstance().getBoolean(Contact.ISCHOOSETYPE, false)) {
+                //                findview();
+                //                init();
+                Intent intent = new Intent(getApplication(), CarTypeActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
         findview();
         init();
@@ -44,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
         mGuide_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getApplication(), CarTypeActivity.class);
                 startActivity(intent);
                 finish();

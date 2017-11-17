@@ -175,15 +175,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
         mTest_explain.setText("   " + mExplain);
 
 
-        if (testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position) != null) {
-
-            TestInfoBean c1 = testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
-            TestInfoBean c11 = testInfoDao.getTrueOrFalseByAll(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
-
-            String item = c1.getItem();
-            String trueorfalse = c11.getTrueOrFalse();
-            loadResult(item, trueorfalse);
-        }
+        //是否是答题模式
         if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
             mLine_explain.setVisibility(View.INVISIBLE);
 
@@ -195,73 +187,101 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             mLine_option3.setEnabled(false);
             mLine_option4.setEnabled(false);
         }
-    }
 
-    private void loadResult(String useranswer, String trueorfalse) {
-        if (trueorfalse.equals("0")) {
-            switch (useranswer) {
-                case "A":
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
-                    break;
-                case "对":
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+        if (testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position) != null) {
 
-                    break;
-                case "B":
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+            TestInfoBean c1 = testInfoDao.getItem(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
+            TestInfoBean c11 = testInfoDao.getTrueOrFalseByAll(cartype, subject, cartype + "-" + subject + "-" + testtype + "-" + position);
 
-                    break;
-                case "错":
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
-
-                    break;
-                case "C":
-                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
-
-                    break;
-                case "D":
-                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
-
-                    break;
-            }
-        } else if (trueorfalse.equals("1")) {
-            switch (useranswer) {
-                case "A":
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
-                    break;
-                case "对":
-                    mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
-
-                    break;
-                case "B":
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
-
-                    break;
-                case "错":
-                    mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
-
-                    break;
-                case "C":
-                    mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
-
-                    break;
-                case "D":
-                    mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
-
-                    break;
-            }
-
-            mLine_option1.setEnabled(false);
-            mLine_option2.setEnabled(false);
-            mLine_option3.setEnabled(false);
-            mLine_option4.setEnabled(false);
-
-
-            showResult();
+            String item = c1.getItem();
+            String trueorfalse = c11.getTrueOrFalse();
+            loadResult(item, trueorfalse);
+            mLine_explain.setVisibility(View.VISIBLE);
 
         }
+    }
 
+    /**
+     * 读取存储的数据
+     *
+     * @param useranswer
+     * @param trueorfalse
+     */
+    private void loadResult(String useranswer, String trueorfalse) {
+        if (trueorfalse.equals("0")) {
+            loadUserAnswersByRight(useranswer);
+        } else if (trueorfalse.equals("1")) {
+            if (useranswer.length() > 1) {
+                String[] useranswers = new String[useranswer.length()];
+                for (int i = 0; i < useranswer.length(); i++) {
+                    useranswers[i] = useranswer.substring(i, i + 1);
+                    loadUserAnswersByWrong(useranswers[i]);
+                }
+            }
+        }
+        mLine_option1.setEnabled(false);
+        mLine_option2.setEnabled(false);
+        mLine_option3.setEnabled(false);
+        mLine_option4.setEnabled(false);
 
+        showResult();
+
+    }
+
+    private void loadUserAnswersByRight(String useranswer) {
+        switch (useranswer) {
+            case "A":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+                break;
+            case "对":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "B":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "错":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "C":
+                mIv_option3.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+            case "D":
+                mIv_option4.setBackgroundResource(R.drawable.ic_answer_currect);
+
+                break;
+        }
+    }
+
+    private void loadUserAnswersByWrong(String useranswer) {
+        switch (useranswer) {
+            case "A":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+                break;
+            case "对":
+                mIv_option1.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                break;
+            case "B":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                break;
+            case "错":
+                mIv_option2.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                break;
+            case "C":
+                mIv_option3.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                break;
+            case "D":
+                mIv_option4.setBackgroundResource(R.drawable.ic_answer_wrong);
+
+                break;
+        }
     }
 
 
@@ -496,6 +516,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 answers[i] = mAnswer.substring(i, i + 1);
                 Log.d("TestPager", "答案是" + answers[i]);
                 showSingleResult(answers[i]);
+
             }
         }
     }
@@ -602,8 +623,8 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             testInfoBean.setItem(multcheck);
             testInfoBean.setTrueOrFalse(trueOrFalse + "");
             testInfoDao.addTestInfo(testInfoBean);
-            showResult();
-
+            //            showResult();
+            loadResult(multcheck, trueOrFalse + "");
         }
     }
 }

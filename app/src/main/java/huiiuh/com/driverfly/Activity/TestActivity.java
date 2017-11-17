@@ -127,7 +127,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * 生成随机数
+     * 生成0-i的随机数
      *
      * @return
      */
@@ -193,6 +193,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 mFragments.add(new TestPager(mList, randnums.get(i)));
 
             }
+
+            mTitleName.setText("全真模拟");
+            mTitleName.setVisibility(View.VISIBLE);
 
             //初始化计时器
             mRela_extraarea.setVisibility(View.VISIBLE);
@@ -333,7 +336,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.titleBack:
-                finish();
+                String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+
+                if (testtype.equals("2")) {
+                    showGoOutMessage();
+                } else {
+
+                    finish();
+                }
                 break;
             case R.id.titleFunction:
                 showTextSizeChangeBar();
