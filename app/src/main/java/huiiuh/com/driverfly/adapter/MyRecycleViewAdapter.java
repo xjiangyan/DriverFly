@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import huiiuh.com.driverfly.Activity.IntroduceActivity;
 import huiiuh.com.driverfly.Activity.TestActivity;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
 
@@ -59,15 +59,14 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<MyRecycleViewAdap
 
                         Intent intent = new Intent(mContext, IntroduceActivity.class);
                         mContext.startActivity(intent);
-                        SpUtil.getInstance().save(Contact.TESTTYPE, "2");
-//                        SpUtil.getInstance().save(Contact.SUBJECT, "1");
-
+                        SpUtil.getInstance().save(Constants.TESTTYPE, "2");
+                        //                        SpUtil.getInstance().save(Constants.SUBJECT, "1");
                     } else {
 
                         Toast.makeText(mContext, "点击了" + getLayoutPosition(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(mContext, TestActivity.class);
-                        SpUtil.getInstance().save(Contact.TESTTYPE, getLayoutPosition() + "");
-//                        SpUtil.getInstance().save(Contact.SUBJECT, "1");
+                        SpUtil.getInstance().save(Constants.TESTTYPE, getLayoutPosition() + "");
+                        //                        SpUtil.getInstance().save(Constants.SUBJECT, "1");
                         mContext.startActivity(intent);
                     }
                 }

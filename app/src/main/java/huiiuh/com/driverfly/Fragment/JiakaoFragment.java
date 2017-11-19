@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import huiiuh.com.driverfly.Activity.CarTypeActivity;
 import huiiuh.com.driverfly.Base.BaseFragment;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.Pager.Subject_Four;
 import huiiuh.com.driverfly.Pager.Subject_One;
 import huiiuh.com.driverfly.Pager.Subject_Three;
@@ -44,6 +44,8 @@ public class JiakaoFragment extends BaseFragment {
         mView = View.inflate(mContext, R.layout.fragment_jiakao, null);
         findView();
         mViewpager_jiakao.setAdapter(new MyAdapter(getFragmentManager()));
+        SpUtil.getInstance().save(Constants.SUBJECT, "1");
+
         mTablayout.setupWithViewPager(mViewpager_jiakao);
         mViewpager_jiakao.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -54,7 +56,7 @@ public class JiakaoFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
 
-                SpUtil.getInstance().save(Contact.SUBJECT, position + 1 + "");
+                SpUtil.getInstance().save(Constants.SUBJECT, position + 1 + "");
             }
 
             @Override
@@ -73,7 +75,7 @@ public class JiakaoFragment extends BaseFragment {
         mTitleName = (TextView) mView.findViewById(R.id.titleName);
         mTitleName.setText("DRIVERFLY");
         mTitleName.setVisibility(View.VISIBLE);
-        String c1 = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String c1 = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
         String cartype = c1;
         switch (c1) {
             case "c1":

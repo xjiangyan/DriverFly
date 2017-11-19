@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".Activity.GradeActivity">
         </activity>
+        <activity android:name=".Activity.URlActivity">
+        </activity>
     </application>
 
 </manifest>

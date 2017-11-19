@@ -37,7 +37,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.Model.bean.DataBean;
 import huiiuh.com.driverfly.Pager.TestPager;
 import huiiuh.com.driverfly.R;
@@ -148,16 +148,16 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
 
 
-        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
+        if (SpUtil.getInstance().getBoolean(Constants.ISDATI, true)) {
             mBtnDati.setChecked(true);
 
         } else {
             mBtnBeiti.setChecked(true);
 
         }
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
 
         getData(cartype, subject);
 
@@ -233,8 +233,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 isDragPage = state == 1;
             }
         });
-        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("0")) {
-            int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
+        if (SpUtil.getInstance().getString(Constants.TESTTYPE, "0").equals("0")) {
+            int currentItem = SpUtil.getInstance().getInt(Constants.CURRENTITEM, 0);
 
             //            mTest_viewpager.setCurrentItem(currentItem);
             mTest_viewpager.setCurrentItem(currentItem);
@@ -247,12 +247,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 switch (i) {
                     case R.id.btn_dati:
                         makeText(getApplicationContext(), "答题", Toast.LENGTH_SHORT).show();
-                        SpUtil.getInstance().save(Contact.ISDATI, true);
+                        SpUtil.getInstance().save(Constants.ISDATI, true);
                         mMyPagerAdapter.notifyDataSetChanged();
                         break;
                     case R.id.btn_beiti:
                         makeText(getApplicationContext(), "背题", Toast.LENGTH_SHORT).show();
-                        SpUtil.getInstance().save(Contact.ISDATI, false);
+                        SpUtil.getInstance().save(Constants.ISDATI, false);
                         mMyPagerAdapter.notifyDataSetChanged();
 
                         break;
@@ -275,11 +275,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         String url = cartype + "_" + subject + "_" + "0.txt";
         //        String url = "c1_1_0.txt";
+        // webview.loadUrl("file:///android_asset/article/detail/baomingxuzhi.html");
 
         //读取assets下的资源文件
 
         try {
             InputStream is = getAssets().open(url);
+            //            InputStream is = getAssets().open("file:///android_asset/"+url);
             int lenght = 0;
 
             lenght = is.available();
@@ -303,11 +305,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         DataBean dataBean = gson.fromJson(result, DataBean.class);
         mTotal = dataBean.getResult().getResult().getTotal();
         mList = dataBean.getResult().getResult().getList();
-        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("2")) {
-            SpUtil.getInstance().save(Contact.LISTNUM, 100 + "");
+        if (SpUtil.getInstance().getString(Constants.TESTTYPE, "0").equals("2")) {
+            SpUtil.getInstance().save(Constants.LISTNUM, 100 + "");
 
         } else {
-            SpUtil.getInstance().save(Contact.LISTNUM, mList.size() + "");
+            SpUtil.getInstance().save(Constants.LISTNUM, mList.size() + "");
 
         }
     }
@@ -336,7 +338,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.titleBack:
-                String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+                String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
 
                 if (testtype.equals("2")) {
                     showGoOutMessage();
@@ -409,7 +411,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final String sizestext[] = new String[]{"0.5特小字体", "0.75小字体", "1.0普通字体", "1.2大字体", "1.5特大字体"};
         final String sizes[] = new String[]{"0.5", "0.75", "1.0", "1.2", "1.5"};
-        String textsize = SpUtil.getInstance().getString(Contact.TEXTSIZE, sizes[2]);
+        String textsize = SpUtil.getInstance().getString(Constants.TEXTSIZE, sizes[2]);
         int checkedtextsize = 2;
         switch (textsize) {
             case "0.5":
@@ -451,7 +453,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                         size = 4;
                         break;
                 }
-                SpUtil.getInstance().save(Contact.TEXTSIZE, sizes[size]);
+                SpUtil.getInstance().save(Constants.TEXTSIZE, sizes[size]);
                 mMyPagerAdapter.notifyDataSetChanged();
             }
         }).show();
@@ -530,10 +532,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        int currentItem = SpUtil.getInstance().getInt(Contact.CURRENTITEM, 0);
+        int currentItem = SpUtil.getInstance().getInt(Constants.CURRENTITEM, 0);
         if (currentItem < mTest_viewpager.getCurrentItem()) {
             currentItem = mTest_viewpager.getCurrentItem();
-            SpUtil.getInstance().save(Contact.CURRENTITEM, currentItem);
+            SpUtil.getInstance().save(Constants.CURRENTITEM, currentItem);
         }
         Log.d("TestActivity", "保存的item位置是" + currentItem);
         mHandler.removeCallbacksAndMessages(null);
@@ -547,7 +549,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public Resources getResources() {
-        String textsize = SpUtil.getInstance().getString(Contact.TEXTSIZE, "1.0");
+        String textsize = SpUtil.getInstance().getString(Constants.TEXTSIZE, "1.0");
         float v = Float.parseFloat(textsize);
         Resources res = super.getResources();
         Configuration config = res.getConfiguration();

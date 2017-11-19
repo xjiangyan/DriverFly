@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.Model.dao.TestInfoDao;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.SpUtil;
@@ -53,10 +53,10 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setData() {
-        String listnum = SpUtil.getInstance().getString(Contact.LISTNUM, "0");
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        String listnum = SpUtil.getInstance().getString(Constants.LISTNUM, "0");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
         TestInfoDao testInfoDao = new TestInfoDao(getApplicationContext());
         mRightnum = testInfoDao.getTrueOrFalseByLitter(cartype, subject, cartype + "-" + subject + "-" + testtype, "0");
         mFalsenum = testInfoDao.getTrueOrFalseByLitter(cartype, subject, cartype + "-" + subject + "-" + testtype, "1");

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.R;
 import huiiuh.com.driverfly.Util.CircleImageView;
 import huiiuh.com.driverfly.Util.SpUtil;
@@ -56,8 +56,8 @@ public class IntroduceActivity extends AppCompatActivity implements View.OnClick
         mTitleName.setText("模拟考试");
         mTitleBack.setOnClickListener(this);
         mBtnStartTest.setOnClickListener(this);
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
         getMessage(subject, cartype);
 
 
@@ -100,7 +100,7 @@ public class IntroduceActivity extends AppCompatActivity implements View.OnClick
                 Intent intent = new Intent(getApplication(), TestActivity.class);
                 startActivity(intent);
                 finish();
-                SpUtil.getInstance().save(Contact.ISTEST, true);
+                SpUtil.getInstance().save(Constants.ISTEST, true);
                 break;
             case R.id.titleBack:
                 finish();

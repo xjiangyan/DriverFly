@@ -18,7 +18,7 @@ import java.util.List;
 import huiiuh.com.driverfly.Activity.ResultActivity;
 import huiiuh.com.driverfly.Activity.TestActivity;
 import huiiuh.com.driverfly.Base.BaseFragment;
-import huiiuh.com.driverfly.Contact;
+import huiiuh.com.driverfly.Constants;
 import huiiuh.com.driverfly.Model.bean.DataBean;
 import huiiuh.com.driverfly.Model.bean.TestInfoBean;
 import huiiuh.com.driverfly.Model.dao.TestInfoDao;
@@ -158,9 +158,9 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
     private void setData() {
         TestInfoDao testInfoDao = new TestInfoDao(mContext);
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
 
 
         processData(list);
@@ -176,7 +176,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
 
         //是否是答题模式
-        if (SpUtil.getInstance().getBoolean(Contact.ISDATI, true)) {
+        if (SpUtil.getInstance().getBoolean(Constants.ISDATI, true)) {
             mLine_explain.setVisibility(View.INVISIBLE);
 
         } else {
@@ -324,7 +324,7 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
      */
     private void judgeQuestionType(String answer) {
         if (answer.length() > 1) {
-            SpUtil.getInstance().save(Contact.QUESTION_TYPE, "1");
+            SpUtil.getInstance().save(Constants.QUESTION_TYPE, "1");
             mIv_questiontype.setImageResource(R.drawable.jiakao_practise_duoxuanti_day);
 
         } else {
@@ -334,10 +334,10 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
                 mIv_questiontype.setImageResource(R.drawable.jiakao_practise_danxuanti_day);
 
             }
-            SpUtil.getInstance().save(Contact.QUESTION_TYPE, "0");
+            SpUtil.getInstance().save(Constants.QUESTION_TYPE, "0");
 
         }
-        mQuestion_type = SpUtil.getInstance().getString(Contact.QUESTION_TYPE, "0");
+        mQuestion_type = SpUtil.getInstance().getString(Constants.QUESTION_TYPE, "0");
         if (mQuestion_type.equals("1")) {
             mBtn_mult_check.setVisibility(View.VISIBLE);
         }
@@ -489,10 +489,10 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
 
 
     private void showIfFinishedTest() {
-        if (SpUtil.getInstance().getString(Contact.TESTTYPE, "0").equals("2")) {
-            String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-            String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-            String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        if (SpUtil.getInstance().getString(Constants.TESTTYPE, "0").equals("2")) {
+            String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+            String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+            String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
 
             TestInfoDao testInfoDao = new TestInfoDao(mContext);
             int falsenum = testInfoDao.getTrueOrFalseByLitter(cartype, subject, cartype + "-" + subject + "-" + testtype, "1");
@@ -552,9 +552,9 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     private void storageInfo() {
         TestActivity testActivity = (TestActivity) mContext;
 
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
         TestInfoDao testInfoDao = new TestInfoDao(mContext);
         TestInfoBean testInfoBean = new TestInfoBean();
         testInfoBean.setType(cartype);
@@ -575,9 +575,9 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-        String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-        String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+        String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+        String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+        String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
 
 
         TestInfoDao testInfoDao = new TestInfoDao(mContext);
@@ -612,9 +612,9 @@ public class TestPager extends BaseFragment implements View.OnClickListener {
             mLine_option3.setEnabled(false);
             mLine_option4.setEnabled(false);
 
-            String cartype = SpUtil.getInstance().getString(Contact.CARTYPE, "c1");
-            String subject = SpUtil.getInstance().getString(Contact.SUBJECT, "1");
-            String testtype = SpUtil.getInstance().getString(Contact.TESTTYPE, "0");
+            String cartype = SpUtil.getInstance().getString(Constants.CARTYPE, "c1");
+            String subject = SpUtil.getInstance().getString(Constants.SUBJECT, "1");
+            String testtype = SpUtil.getInstance().getString(Constants.TESTTYPE, "0");
             TestInfoDao testInfoDao = new TestInfoDao(mContext);
             TestInfoBean testInfoBean = new TestInfoBean();
             testInfoBean.setType(cartype);

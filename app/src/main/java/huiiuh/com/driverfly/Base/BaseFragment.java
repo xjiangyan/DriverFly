@@ -46,6 +46,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void initData() {
+
     }
 
     ;
@@ -91,5 +92,6 @@ public abstract class BaseFragment extends Fragment {
 
         }
     }
+
     protected abstract void loadData();
 }

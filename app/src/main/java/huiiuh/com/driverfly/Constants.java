@@ -7,11 +7,15 @@ package huiiuh.com.driverfly;
  * @updateAuthor $Author$
  * @updateDes ${TODO}
  */
-public class Contact {
+public class Constants {
 
     public static final String LISTNUM = "listnum";
     public static final String ISTEST = "sitest";
     public static final String QUESTION_TYPE = "question_type";
+    public static final String URL_PATH = "url_path";
+    public static final String BASEURL = "file:///android_asset/article/detail/";
+    public static final String TITLENAME = "titlename";
+    public static final String URL_PATH2 = "url_path2";
     public static String basepath = "https://way.jd.com/jisuapi/driverexamQuery?";
     public static String type = "type=";
     public static String subject = "&subject=";
